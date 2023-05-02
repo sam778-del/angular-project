@@ -1,0 +1,454 @@
+<div class="max-w-1xl mx-auto">
+  <div class="bg-white rounded-3xl p-8 mb-5">
+    <div class="flex flex-col">
+      <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div
+          class="px-6 py-4 border-b border-gray-200 flex justify-between items-center"
+        >
+          <h2 class="text-lg font-medium text-gray-900">User List</h2>
+          <button
+            class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+            (click)="openModal()"
+          >
+            Add User
+          </button>
+        </div>
+        <div class="p-0 px-6">
+          <div class="flex flex-col">
+            <div class="my-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div *ngIf="loading" class="flex items-center justify-center">
+                <div
+                  class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"
+                ></div>
+              </div>
+              <div *ngIf="error" class="flex justify-center">
+                <div
+                  class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                  role="alert"
+                >
+                  <strong class="font-bold">Error!</strong>
+                  <span class="block sm:inline">{{ error.message }}</span>
+                </div>
+              </div>
+              <table
+                class="min-w-full divide-gray-200"
+                *ngIf="!loading && !error"
+              >
+                <thead class="bg-yellow-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Email
+                    </th>
+                    <th scope="col" class="relative px-6 py-3">
+                      <span class="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let user of userList">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                          <img
+                            class="h-10 w-10 rounded-full"
+                            src="https://source.unsplash.com/random/50x50"
+                            alt=""
+                          />
+                        </div>
+                        <div class="ml-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            {{ user.name }}
+                          </div>
+                          <div class="text-sm text-gray-500">
+                            {{ user.role }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ user.email }}</div>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                    >
+                      <a href="#" class="text-indigo-600 hover:text-indigo-900"
+                        >Edit</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- Pagination controls -->
+              <div class="flex justify-center mt-4">
+                <pagination-controls
+                  class="flex justify-center my-4"
+                  previousLabel="Previous"
+                  nextLabel="Next"
+                  (pageChange)="onPageChange($event)"
+                >
+                </pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #modalRef *ngIf="showModal" class="fixed z-10 inset-0 overflow-y-auto">
+  <div
+    class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <!-- Background overlay -->
+    <div class="fixed inset-0 transition-opacity">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+    >
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div
+            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10"
+          >
+            <!-- Heroicon name: outline/exclamation -->
+            <svg
+              class="h-6 w-6 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 2a2 2 0 100-4 2 2 0 000 4z"
+              />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              User Creation
+            </h3>
+            <div class="mt-2">
+              <!-- Add your form elements here -->
+              <form [formGroup]="userForm">
+                <div>
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    formControlName="name"
+                    autocomplete="given-name"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      userForm.get('name')?.invalid &&
+                      (userForm.get('name')?.dirty ||
+                        userForm.get('name')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please enter a valid name.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Email address</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    formControlName="email"
+                    autocomplete="email"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      userForm.get('email')?.invalid &&
+                      (userForm.get('email')?.dirty ||
+                        userForm.get('email')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please enter a valid email address.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="role"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Role</label
+                  >
+                  <select
+                    id="role"
+                    name="role"
+                    formControlName="role"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  >
+                    <option value="" disabled selected>Select a role</option>
+                    <option value="user">User</option>
+                    <option value="owner">Owner</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                  <div
+                    *ngIf="
+                      userForm.get('role')?.invalid &&
+                      (userForm.get('role')?.dirty ||
+                        userForm.get('role')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please select a valid role.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Password</label
+                  >
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    formControlName="password"
+                    autocomplete="current-password"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      userForm.get('password')?.invalid &&
+                      (userForm.get('password')?.dirty ||
+                        userForm.get('password')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please enter a valid password with at least 6 characters.
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button
+          type="button"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="submitForm()"
+        >
+          Create
+        </button>
+        <button
+          type="button"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #modalRef *ngIf="showModal" class="fixed z-10 inset-0 overflow-y-auto">
+  <div
+    class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <!-- Background overlay -->
+    <div class="fixed inset-0 transition-opacity">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+    >
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div
+            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10"
+          >
+            <!-- Heroicon name: outline/exclamation -->
+            <svg
+              class="h-6 w-6 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 2a2 2 0 100-4 2 2 0 000 4z"
+              />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              User Creation
+            </h3>
+            <div class="mt-2">
+              <!-- Add your form elements here -->
+              <form [formGroup]="userForm">
+                <div>
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    formControlName="name"
+                    autocomplete="given-name"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      userForm.get('name')?.invalid &&
+                      (userForm.get('name')?.dirty ||
+                        userForm.get('name')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please enter a valid name.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Email address</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    formControlName="email"
+                    autocomplete="email"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      userForm.get('email')?.invalid &&
+                      (userForm.get('email')?.dirty ||
+                        userForm.get('email')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please enter a valid email address.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="role"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Role</label
+                  >
+                  <select
+                    id="role"
+                    name="role"
+                    formControlName="role"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  >
+                    <option value="" disabled selected>Select a role</option>
+                    <option value="user">User</option>
+                    <option value="owner">Owner</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                  <div
+                    *ngIf="
+                      userForm.get('role')?.invalid &&
+                      (userForm.get('role')?.dirty ||
+                        userForm.get('role')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please select a valid role.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Password</label
+                  >
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    formControlName="password"
+                    autocomplete="current-password"
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                  <div
+                    *ngIf="
+                      userForm.get('password')?.invalid &&
+                      (userForm.get('password')?.dirty ||
+                        userForm.get('password')?.touched)
+                    "
+                    class="text-sm text-red-600 mt-1"
+                  >
+                    Please enter a valid password with at least 6 characters.
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button
+          type="button"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="submitForm()"
+        >
+          Create
+        </button>
+        <button
+          type="button"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
