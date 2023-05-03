@@ -69,7 +69,7 @@
                             {{ user.name }}
                           </div>
                           <div class="text-sm text-gray-500">
-                            {{ user.role }}
+                            {{ user.Role?.name }}
                           </div>
                         </div>
                       </div>
@@ -213,9 +213,7 @@
                     required
                   >
                     <option value="" disabled selected>Select a role</option>
-                    <option value="user">User</option>
-                    <option value="owner">Owner</option>
-                    <option value="manager">Manager</option>
+                    <option value="{{ role.id }}" *ngFor="let role of roles">{{ role.name }}</option>
                   </select>
                   <div
                     *ngIf="
@@ -387,9 +385,7 @@
                     required
                   >
                     <option value="" disabled selected>Select a role</option>
-                    <option value="user">User</option>
-                    <option value="owner">Owner</option>
-                    <option value="manager">Manager</option>
+                    <option value="{{ role.id }}" *ngFor="let role of roles">{{ role.name }}</option>
                   </select>
                   <div
                     *ngIf="

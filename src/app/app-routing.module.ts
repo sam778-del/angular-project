@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '@auth0/auth0-angular';
+import { UserComponent } from './modules/dashboard/pages/user/user.component';
 
 const routes: Routes = [
   {
@@ -9,6 +11,11 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'auth0',
+    component: UserComponent,
+    canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: 'error/404' },
 ];

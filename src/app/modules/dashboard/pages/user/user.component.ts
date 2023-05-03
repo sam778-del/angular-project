@@ -4,6 +4,7 @@ import { CreateService } from 'src/app/core/services/user.service';
 import { UserService } from '../../service/UserService';
 import { User } from '../../service/user.model';
 import { User as CreateModel } from 'src/app/core/models/user.model';
+import { PermissionService } from 'src/app/core/services/permission.service';
 
 @Component({
   selector: 'app-user',
@@ -16,6 +17,8 @@ export class UserComponent implements OnInit {
 
   userForm: FormGroup;
   submitted = false;
+
+  roles: any[] = [];
 
   // modal
   showModal = false;
@@ -34,7 +37,8 @@ export class UserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private createService: CreateService
+    private createService: CreateService,
+    private roleService: PermissionService
   ) {
     this.userForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -50,6 +54,19 @@ export class UserComponent implements OnInit {
 
   getUsers() {
     this.loading = true;
+
+    this.roleService.getAllRoles().subscribe(
+      (data: any) => {
+        this.roles = data;
+        this.loading = false;
+      },
+      (error: any) => {
+        this.error = error;
+        this.loading = false;
+      }
+    );
+
+
     this.userService.getUsers(this.page, this.pageSize).subscribe(
       res => {
         this.userList = res;

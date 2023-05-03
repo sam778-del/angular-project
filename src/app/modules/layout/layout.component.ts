@@ -16,16 +16,14 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     // this.accountService.checkTokenValidity().subscribe(
-    //   valid => {
-    //     if (!valid) {
+    //   data => {
+    //     if (!data.valid) {
     //       // logout the user and redirect to login page
-    //       // this.accountService.logout();
-    //       // this.router.navigate(['/auth/login']);
+    //       this.accountService.logout();
+    //       this.router.navigate(['/auth/login']);
     //     }
     //   },
     //   error => {
-    //     // this.accountService.logout();
-    //     // this.router.navigate(['/auth/login']);
     //     console.error(error); // handle error if any
     //   }
     // );

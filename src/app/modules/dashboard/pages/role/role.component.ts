@@ -46,6 +46,11 @@ export class RoleComponent implements OnInit {
         this.error = error;
       }
     );
+    this.getActivePermissionByRole(1, 2);
+  }
+
+  isActivePermissionByRole(roleId: number, permissionId: number) {
+    
   }
 
   getActivePermissionByRole(roleId: number, permissionId: number) {

@@ -21,7 +21,13 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.accountService.logout();
+      this.router.navigate(['/auth/login']);
+    } else {
+      this.router.navigate(['/dashboard/users']);
+    }
   }
 
   loginWithFacebook() {
@@ -31,5 +37,9 @@ export class SignInComponent implements OnInit {
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.router.navigateByUrl(returnUrl);
       });
+  }
+
+  signIn() {
+    this.router.navigate(['/auth0']);
   }
 }

@@ -35,7 +35,7 @@
                   <tr *ngFor="let permission of permissions">
                     <td class="border px-7 py-2">{{ permission.name }}</td>
                     <td *ngFor="let role of roles" class="border px-4 py-2 text-center">
-                      <input type="checkbox" class="form-checkbox h-4 w-4" [checked]="getActivePermissionByRole(role.id, permission.id)" />
+                      <input type="checkbox" class="form-checkbox h-4 w-4" [checked]="isActivePermissionByRole(role.id, permission.id)" />
                     </td>
                   </tr>
                 </tbody>

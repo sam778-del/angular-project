@@ -19,6 +19,8 @@
     "@angular/platform-browser": "^14.2.0",
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
+    "@auth0/auth0-angular": "^2.1.0",
+    "@auth0/auth0-spa-js": "^2.0.4",
     "@types/facebook-js-sdk": "^3.3.6",
     "fbgraph": "^0.1.0",
     "fs": "^0.0.1-security",
