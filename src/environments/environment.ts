@@ -9,7 +9,7 @@ export const environment = {
   auth0: {
     domain: 'dev-5tf99p7c.us.auth0.com',
     clientId: 'GBPB42qhMWCtvrwGmYxvm5cbHXU68nzG',
-    redirectUri: 'http://69.57.161.71/auth0',
+    redirectUri: 'https://angular-project-psi.vercel.app/auth0',
   },
 };
 
